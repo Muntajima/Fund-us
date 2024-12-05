@@ -34,7 +34,7 @@ async function run() {
     app.get('/campaign', async(req, res) =>{
       const cursor = campaignCollection.find();
       const result = await cursor.toArray();
-      res.send(result)
+      res.send(result);
     })
 
     app.post('/campaign', async(req, res) =>{
