@@ -30,6 +30,7 @@ async function run() {
     //await client.connect();
 
     const campaignCollection = client.db('campaignDB').collection('campaign');
+    const userCollection = client.db('campaignDB').collection('users');
 
     app.get('/campaign', async(req, res) =>{
       const cursor = campaignCollection.find();
@@ -45,6 +46,20 @@ async function run() {
     })
 
 
+    //users db
+
+    app.get('/users', async(req, res) =>{
+      const cursor = userCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.post('/users', async(req, res) =>{
+      const newUser = req.body;
+      console.log("new user created:", newUser);
+      const result = await userCollection.insertOne(newUser);
+      res.send(result);
+    })
 
 
 
