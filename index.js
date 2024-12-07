@@ -1,7 +1,8 @@
+require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-require('dotenv').config()
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -13,7 +14,7 @@ const user = process.env.DB_USER;
 const password = process.env.DB_PASS;
 
 const uri = `mongodb+srv://${user}:${password}@cluster0.oi99s.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-console.log(uri)
+//console.log(uri)
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
@@ -27,7 +28,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    //await client.connect();
+    await client.connect();
 
     const campaignCollection = client.db('campaignDB').collection('campaign');
     const userCollection = client.db('campaignDB').collection('users');
@@ -112,14 +113,14 @@ async function run() {
     })
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
+    //await client.db("admin").command({ ping: 1 });
+    //console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } catch {
     // Ensures that the client will close when you finish/error
     //await client.close();
   }
 }
-run().catch(console.dir);
+run()
 
 
 
@@ -127,6 +128,6 @@ app.get('/', (req, res) => {
   res.send("Fund me server is running well");
 })
 
-app.listen(port, () => {
-  console.log(`Fund me server is running on port: ${port}`)
-})
+// app.listen(port, () => {
+//   console.log(`Fund me server is running on port: ${port}`)
+// })
