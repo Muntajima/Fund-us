@@ -32,13 +32,13 @@ async function run() {
     const campaignCollection = client.db('campaignDB').collection('campaign');
     const userCollection = client.db('campaignDB').collection('users');
 
-    app.get('/campaign', async(req, res) =>{
+    app.get('/campaign', async (req, res) => {
       const cursor = campaignCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
-    app.post('/campaign', async(req, res) =>{
+    app.post('/campaign', async (req, res) => {
       const newCampaign = req.body;
       console.log(newCampaign);
       const result = await campaignCollection.insertOne(newCampaign);
@@ -48,23 +48,51 @@ async function run() {
 
     //users db
 
-    app.get('/users', async(req, res) =>{
+    app.get('/users', async (req, res) => {
       const cursor = userCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     })
 
-    app.post('/users', async(req, res) =>{
+    app.post('/users', async (req, res) => {
       const newUser = req.body;
       console.log("new user created:", newUser);
       const result = await userCollection.insertOne(newUser);
       res.send(result);
     })
 
-    app.delete('/campaign/:id', async(req, res) =>{
+    app.delete('/campaign/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: new ObjectId(id)};
+      const query = { _id: new ObjectId(id) };
       const result = await campaignCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    // for update
+    app.get('/campaign/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await campaignCollection.findOne(query);
+      res.send(result);
+    })
+
+    app.put('/campaign/:id', async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const options = { upsert: true };
+      const updatedCampaign = req.body;
+      const Campaign = {
+        $set: {
+          title: updatedCampaign.title,
+          type: updatedCampaign.type,
+          amount: updatedCampaign.amount,
+          deadline: updatedCampaign.deadline,
+          description: updatedCampaign.description,
+          image: updatedCampaign.image
+        }
+      }
+
+      const result = await campaignCollection.updateOne(filter, Campaign, options);
       res.send(result);
     })
 
@@ -80,10 +108,10 @@ run().catch(console.dir);
 
 
 
-app.get('/', (req, res) =>{
-    res.send("Fund me server is running well");
+app.get('/', (req, res) => {
+  res.send("Fund me server is running well");
 })
 
-app.listen(port, () =>{
-    console.log(`Fund me server is running on port: ${port}`)
+app.listen(port, () => {
+  console.log(`Fund me server is running on port: ${port}`)
 })
