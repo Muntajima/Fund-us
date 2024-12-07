@@ -31,6 +31,7 @@ async function run() {
 
     const campaignCollection = client.db('campaignDB').collection('campaign');
     const userCollection = client.db('campaignDB').collection('users');
+    const donatedCollection = client.db('campaignDB').collection('donation');
 
     app.get('/campaign', async (req, res) => {
       const cursor = campaignCollection.find();
@@ -93,6 +94,20 @@ async function run() {
       }
 
       const result = await campaignCollection.updateOne(filter, Campaign, options);
+      res.send(result);
+    })
+
+    //donation
+    app.get('/donated', async (req, res) => {
+      const cursor = donatedCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
+
+    app.post('/donated', async (req, res) => {
+      const newCampaign = req.body;
+      console.log(newCampaign);
+      const result = await donatedCollection.insertOne(newCampaign);
       res.send(result);
     })
 
