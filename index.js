@@ -1,9 +1,10 @@
 require('dotenv').config()
 const express = require('express');
 const cors = require('cors');
+const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
-const app = express();
+
 const port = process.env.PORT || 5000;
 
 //middlewear
@@ -17,6 +18,8 @@ const uri = `mongodb+srv://${user}:${password}@cluster0.oi99s.mongodb.net/?retry
 //console.log(uri)
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
+
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -25,10 +28,11 @@ const client = new MongoClient(uri, {
   }
 });
 
-async function run() {
+
+function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //await client.connect();
 
     const campaignCollection = client.db('campaignDB').collection('campaign');
     const userCollection = client.db('campaignDB').collection('users');
@@ -128,6 +132,9 @@ app.get('/', (req, res) => {
   res.send("Fund me server is running well");
 })
 
-// app.listen(port, () => {
-//   console.log(`Fund me server is running on port: ${port}`)
-// })
+
+app.listen(port, () => {
+  console.log(`Fund me server is running on port: ${port}`)
+})
+
+
